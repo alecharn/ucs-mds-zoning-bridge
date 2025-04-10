@@ -1,0 +1,48 @@
+# Ignore env file
+.env
+
+# Ignore virtual environment
+venv/
+env/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore compiled files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore package files
+*.egg-info/
+dist/
+build/
+
+# Ignore log files
+*.log
+
+# Ignore database files
+*.db
+*.sqlite
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
+
+# Ignore all files that start with the word "utility"
+utility*
+utility.py
+
+# Ignore all YAML files
+*.yaml

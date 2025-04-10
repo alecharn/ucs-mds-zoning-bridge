@@ -1,0 +1,5 @@
+fire
+intersight
+python-dotenv
+requests
+urllib3
