@@ -156,7 +156,6 @@ class ZoneBridgeClient:
                 )
                 sys.exit(1)
 
-
     # Method to add zones in zonesets on each MDS of Fabric A and B
     def add_zones_to_zonesets(
         self,
@@ -229,7 +228,7 @@ class ZoneBridgeClient:
     ):
         """
         Fetch vHBAs attached to an Intersight Server Profile, optionnaly configure device aliases, and add them as members of a zone on each MDS of Fabric A and B.
-        
+
         This method is used to configure zones in MDS based on the vHBAs attached to a Server Profile in Intersight.
         It fetches the vHBA information from Intersight and configures device aliases on MDS (if the flag is set to true).
         It also adds the vHBA WWPNs or device aliases as members of the specified zones in MDS.
@@ -261,8 +260,10 @@ class ZoneBridgeClient:
         """
 
         # Fetch the organization moid from Intersight
-        organization_moid = self.intersight_client.fetch_organization_moid_from_organization_name(
-            organization_name=organization_name,
+        organization_moid = (
+            self.intersight_client.fetch_organization_moid_from_organization_name(
+                organization_name=organization_name,
+            )
         )
 
         # Fetch the server profile moid from Intersight
@@ -315,7 +316,6 @@ class ZoneBridgeClient:
                         vhba["name"],
                     )
                     sys.exit(1)
-
 
             # If flag is set to False, use the WWPN directly for zoning
             # and do not configure device aliases
@@ -381,12 +381,12 @@ class ZoneBridgeClient:
                 )
                 sys.exit(1)
 
-
         # Add zones to zonesets if the flag is set to True
         if flag_add_zones_to_zonesets:
             logger.info(
                 "Adding zones to zonesets in MDS\n",
             )
+
             # Check that zoneset names are provided
             if zoneset_name_a is None or zoneset_name_b is None:
                 logger.error(
@@ -427,6 +427,13 @@ class ZoneBridgeClient:
 
         # Activate zonesets if the flag is set to True
         if flag_activate_zonesets:
+
+            # Check that zoneset names are provided
+            if zoneset_name_a is None or zoneset_name_b is None:
+                logger.error(
+                    "Zoneset names are required to add zones to zonesets in MDS\n"
+                )
+                sys.exit(1)
 
             logger.info(
                 "Activating zonesets in MDS\n",
