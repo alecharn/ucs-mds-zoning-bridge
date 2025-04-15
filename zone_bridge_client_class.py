@@ -7,6 +7,9 @@ Author:
     Adrien LECHARNY - April 2025
 """
 
+# Standard library imports
+import sys
+
 # Local application imports
 from base_logger import logger
 
@@ -151,6 +154,8 @@ class ZoneBridgeClient:
                     vhba["fabric"],
                     vhba["name"],
                 )
+                sys.exit(1)
+
 
     # Method to add zones in zonesets on each MDS of Fabric A and B
     def add_zones_to_zonesets(
@@ -309,6 +314,8 @@ class ZoneBridgeClient:
                         vhba["fabric"],
                         vhba["name"],
                     )
+                    sys.exit(1)
+
 
             # If flag is set to False, use the WWPN directly for zoning
             # and do not configure device aliases
@@ -330,6 +337,7 @@ class ZoneBridgeClient:
                     "Unknown flag value '%s' for device alias configuration",
                     flag_configure_device_aliases,
                 )
+                sys.exit(1)
 
             # Check if the vHBA is in Fabric A or B
             if vhba["vhba_fabric"] == "A":
@@ -371,12 +379,21 @@ class ZoneBridgeClient:
                     vhba["fabric"],
                     vhba["name"],
                 )
+                sys.exit(1)
+
 
         # Add zones to zonesets if the flag is set to True
         if flag_add_zones_to_zonesets:
             logger.info(
                 "Adding zones to zonesets in MDS\n",
             )
+            # Check that zoneset names are provided
+            if zoneset_name_a is None or zoneset_name_b is None:
+                logger.error(
+                    "Zoneset names are required to add zones to zonesets in MDS\n"
+                )
+                sys.exit(1)
+
             # Add the zone to the zoneset in Fabric A
             logger.info(
                 "Adding zone '%s' of vsan `%s` to zoneset '%s' in MDS '%s' (Fabric A)\n",
