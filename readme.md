@@ -57,21 +57,21 @@ python zone_bridge_fire.py configure_intersight_mds_zones [OPTIONS]
 - `--flag_add_zones_to_zonesets`: (Optional) Boolean flag to add zones to zonesets. Default is `true`.
 - `--flag_activate_zonesets`: (Optional) Boolean flag to activate zonesets. Default is `true`.
 
-### fevice-Aliases Considerations
+### Device-Aliases Considerations
 
 If `flag_configure_device_aliases` is set to `true`, device-alias is automatically created for the vHBAs WWPNs on each MDS, and has the following structure: `{server_profile_name}-{fabric}-{vhba_name}`
 
-For example, if the Server Profile in Intersight is named `ucs-sp-1`, has two vHBAs with names `vhba0` attached to Fabric A (WWPN 20:00:00:00:00:00:00:01) and `vhba1` attached to Fabric B (WWPN 20:00:00:00:00:00:00:02), the device-aliases would be:
-- On Mds A : `device-alias name ucs-sp-1-A-vhba0 pwwn 20:00:00:00:00:00:00:01`
-- On Mds B : `device-alias name ucs-sp-1-B-vhba1 pwwn 20:00:00:00:00:00:00:02`
+For example, if the Server Profile in Intersight is named `ucs-sp-1`, has two vHBAs with names `vhba0` attached to Fabric A (`WWPN 20:00:00:00:00:00:00:01`) and `vhba1` attached to Fabric B (`WWPN 20:00:00:00:00:00:00:02`), the device-aliases would be:
+- On MDS A : `device-alias name ucs-sp-1-A-vhba0 pwwn 20:00:00:00:00:00:00:01`
+- On MDS B : `device-alias name ucs-sp-1-B-vhba1 pwwn 20:00:00:00:00:00:00:02`
 
-When `flag_configure_device_aliases` is set to `true`, device-aliases are used to add members in MDS zones instead of directly using the WWPNs of vHBAs. For example, if using zone `zone-demo-a` on MDS A in vsan 100, following configuration would be pushed to MDS A :
+When `flag_configure_device_aliases` is set to `true`, device-aliases are used to add members in MDS zones instead of directly using the WWPNs of vHBAs. For example, if using zone `zone-demo-a` in `vsan 100` of MDS A, following configuration would be pushed to MDS A :
 ```bash
 zone name zone-demo-a vsan 100
     member device-alias ucs-sp-1-A-vhba0
 ```
 
-When `flag_configure_device_aliases` is set to `false`, WWPNs of vHBAs are used to add members in MDS zones. For example, if using zone `zone-demo-a` on MDS A in vsan 100, following configuration would be pushed to MDS A :
+When `flag_configure_device_aliases` is set to `false`, WWPNs of vHBAs are used to add members in MDS zones. For example, if using zone `zone-demo-a` in `vsan 100` of MDS A, following configuration would be pushed to MDS A :
 ```bash
 zone name zone-demo-a vsan 100
     member pwwn 20:00:00:00:00:00:00:01
@@ -84,23 +84,56 @@ zone name zone-demo-a vsan 100
 Fetch UCS Server Profile and its vHBAs WWPNs, create device-aliases, add the device-aliases as member of MDS zones, add zones to zonesets and activate zonesets:
 
 ```bash
-python zone_bridge_fire.py configure_intersight_mds_zones --server_profile_name=ucs-sp-1 --organization_name=demo --zone_name_a=zone-demo-a --vsan_id_a=100 --zone_name_b=zone-demo-b --vsan_id_b=200 --zoneset_name_a=zoneset-demo-a --zoneset_name_b=zoneset-demo-b --flag_configure_device_aliases=true --flag_add_zones_to_zonesets=true --flag_activate_zonesets=true
+python zone_bridge_fire.py configure_intersight_mds_zones \
+    --server_profile_name=ucs-sp-1 \
+    --organization_name=demo \
+    --zone_name_a=zone-demo-a \
+    --vsan_id_a=100 \
+    --zone_name_b=zone-demo-b \
+    --vsan_id_b=200 \
+    --zoneset_name_a=zoneset-demo-a \
+    --zoneset_name_b=zoneset-demo-b \
+    --flag_configure_device_aliases=true \
+    --flag_add_zones_to_zonesets=true \
+    --flag_activate_zonesets=true
 ```
 
-### Example 2
+#### Example 2
 
 Fetch UCS Server Profile and its vHBAs WWPNs, skip device-aliases creation, add the vHBAs WWPNs as member of MDS zones, add zones to zonesets and activate zonesets:
 
 ```bash
-python zone_bridge_fire.py configure_intersight_mds_zones --server_profile_name=ucs-sp-1 --organization_name=demo --zone_name_a=zone-demo-a --vsan_id_a=100 --zone_name_b=zone-demo-b --vsan_id_b=200 --zoneset_name_a=zoneset-demo-a --zoneset_name_b=zoneset-demo-b --flag_configure_device_aliases=false --flag_add_zones_to_zonesets=true --flag_activate_zonesets=true
+python zone_bridge_fire.py configure_intersight_mds_zones \
+    --server_profile_name=ucs-sp-1 \
+    --organization_name=demo \
+    --zone_name_a=zone-demo-a \
+    --vsan_id_a=100 \
+    --zone_name_b=zone-demo-b \
+    --vsan_id_b=200 \
+    --zoneset_name_a=zoneset-demo-a \
+    --zoneset_name_b=zoneset-demo-b \
+    --flag_configure_device_aliases=false \
+    --flag_add_zones_to_zonesets=true \
+    --flag_activate_zonesets=true
 ```
 
-### Example 3
+#### Example 3
 
 Fetch UCS Server Profile and its vHBAs WWPNs, skip device-aliases creation, add the vHBAs WWPNs as member of MDS zones, skip adding zones to zonesets and skip zonesets activation:
 
 ```bash
-python zone_bridge_fire.py configure_intersight_mds_zones --server_profile_name=ucs-sp-1 --organization_name=demo --zone_name_a=zone-demo-a --vsan_id_a=100 --zone_name_b=zone-demo-b --vsan_id_b=200 --zoneset_name_a=zoneset-demo-a --zoneset_name_b=zoneset-demo-b --flag_configure_device_aliases=false --flag_add_zones_to_zonesets=false --flag_activate_zonesets=false
+python zone_bridge_fire.py configure_intersight_mds_zones \
+    --server_profile_name=ucs-sp-1 \
+    --organization_name=demo \
+    --zone_name_a=zone-demo-a \
+    --vsan_id_a=100 \
+    --zone_name_b=zone-demo-b \
+    --vsan_id_b=200 \
+    --zoneset_name_a=zoneset-demo-a \
+    --zoneset_name_b=zoneset-demo-b \
+    --flag_configure_device_aliases=false \
+    --flag_add_zones_to_zonesets=false \
+    --flag_activate_zonesets=false
 ```
 
 ## Contributing
