@@ -44,7 +44,7 @@ class IntersightClient:
         _intersight_key_id (str): The Intersight key ID.
         _intersight_secret_key_path (str): The path to the Intersight secret key.
         _intersight_url (str): The URL of the Cisco Intersight.
-        _api_client (intersight.ApiClient): The Intersight API client.
+        _api_client (intersight.ApiClient): Intersight API client.
     """
 
     def __init__(
@@ -57,54 +57,60 @@ class IntersightClient:
         Initialize the IntersightClient class.
 
         Args:
-            intersight_key_id (str): The Intersight key ID.
-            intersight_secret_key_path (str): The path to the Intersight secret key.
-            intersight_url (str): The URL of the Cisco Intersight."""
+            intersight_key_id (str): Intersight key ID.
+            intersight_secret_key_path (str): Path to Intersight secret key.
+            intersight_url (str): URL of the Cisco Intersight.
+        """
 
         logger.info(
-            "Initializating IntersightClient instance with Cisco Intersight at URL '%s'\n",
+            "Initializating `IntersightClient` instance with Cisco Intersight at URL '%s'.\n",
             intersight_url,
         )
 
-        # Check if the Intersight key ID is provided
+        # Check if Intersight key ID is provided
         if not intersight_key_id:
             logger.error(
                 "Intersight key ID is not provided. Please provide a valid Intersight key ID.\n"
             )
             sys.exit(1)
-        # Check if the Intersight secret key path is provided
+
+        # Check if Intersight secret key path is provided
         if not intersight_secret_key_path:
             logger.error(
                 "Intersight secret key path is not provided. Please provide a valid Intersight secret key path.\n"
             )
             sys.exit(1)
-        # Check if the Intersight URL is provided
+
+        # Check if Intersight URL is provided
         if not intersight_url:
             logger.error(
                 "Intersight URL is not provided. Please provide a valid Intersight URL.\n"
             )
             sys.exit(1)
+
         # Check if the Intersight URL is valid
         if not intersight_url.startswith("https://"):
             logger.error(
                 "Intersight URL is not valid. Please provide a valid Intersight URL.\n"
             )
             sys.exit(1)
+
         self._intersight_key_id = intersight_key_id
         self._intersight_secret_key_path = intersight_secret_key_path
         self._intersight_url = intersight_url
 
+        # Authenticate to Intersight and assign Intersight API client to IntersightClient.
         self._api_client = self.authenticate_and_assign_intersight_api_client()
 
         logger.info(
-            "IntersightClient instance was successfully initialized with Cisco Intersight at URL '%s'\n",
+            "`IntersightClient` instance was successfully initialized with Cisco Intersight at URL '%s'.\n",
             intersight_url,
         )
 
-    # Method to authenticate to Intersight and assign Intersight API client to IntersightClient.
+    # Method to authenticate to Intersight and assign Intersight API client to `IntersightClient`.
     def authenticate_and_assign_intersight_api_client(self):
         """
-        Authenticates to Intersight and assigns Intersight API client to IntersightClient instance.
+        Authenticates to Intersight and assigns Intersight API client to `IntersightClient` instance.
 
         This method generates Intersight API client for authentication to Intersight. It sets up the necessary configuration
         including Intersight URL, signing information, signing scheme, signing algorithm, signed headers, and signature validity.
@@ -116,8 +122,9 @@ class IntersightClient:
         Returns:
             None
         """
+
         logger.info(
-            "Generating Intersight API client for authentication to Intersight\n"
+            "Generating Intersight API client for authentication to Intersight.\n"
         )
 
         intersight_key_id = self._intersight_key_id
@@ -156,7 +163,7 @@ class IntersightClient:
         api_client.set_default_header("Content-Type", "application/json")
 
         logger.info(
-            "Authentication was successfull and Intersight API client was successfully generated and assigned to IntersightClient\n"
+            "Authentication is successfull and Intersight API client is successfully generated and assigned to `IntersightClient` instance.\n"
         )
 
         return api_client
@@ -169,17 +176,18 @@ class IntersightClient:
         Fetches a Server Profile moid filtered by the given Server Profile name and Organization moid.
 
         Args:
-            server_profile_name (str): The name of the Server Profile.
-            organization_moid (str): The moid of the Organization.
+            server_profile_name (str): Name of the Server Profile.
+            organization_moid (str): Moid of the Organization.
 
         Returns:
-            server_profile_moid (str): The Server Profile moid.
+            server_profile_moid (str): Server Profile moid.
 
         Raises:
             intersight.ApiException: If an error occurs while retrieving the Server Profile.
         """
+
         logger.info(
-            "Fetching Server Profile moid filtered by Server Profile name '%s' and Organization moid `%s`\n",
+            "Fetching Server Profile moid filtered by Server Profile name '%s' and Organization moid `%s`.\n",
             server_profile_name,
             organization_moid,
         )
@@ -197,21 +205,23 @@ class IntersightClient:
 
         except intersight.ApiException as exception:
             logger.warning(
-                "Exception when calling ServerApi->get_server_profile_list: '%s'\n",
+                "Exception when calling ServerApi->get_server_profile_list: '%s'.\n",
                 exception,
             )
             sys.exit(1)
 
         if server_profile_result.results:
             server_profile_moid = server_profile_result.results[0].moid
+
             logger.info(
-                "Moid of the Server Profile name '%s' is '%s'\n",
+                "Moid of the Server Profile name '%s' is '%s'.\n",
                 server_profile_name,
                 server_profile_moid,
             )
+
         else:
             logger.error(
-                "Server Profile with name '%s' with Organization moid `%s` not found in Intersight\n",
+                "Server Profile with name '%s' and Organization moid `%s` not found in Intersight.\n",
                 server_profile_name,
                 organization_moid,
             )
@@ -225,16 +235,17 @@ class IntersightClient:
         Fetches an Organization moid filtered by the given Organization name.
 
         Args:
-            organization_name (str): The name of the Organization.
+            organization_name (str): Name of the Organization.
 
         Returns:
-            organization_moid (str): The moid of the Organization.
+            organization_moid (str): Moid of the Organization.
 
         Raises:
             intersight.ApiException: If an error occurs while retrieving the Organization.
         """
+
         logger.info(
-            "Fetching Organization moid filtered by Organization name '%s'\n",
+            "Fetching Organization moid filtered by Organization name '%s'.\n",
             organization_name,
         )
 
@@ -251,7 +262,7 @@ class IntersightClient:
 
         except intersight.ApiException as exception:
             logger.warning(
-                "Exception when calling OrganizationApi->get_organization_organization_list: '%s'\n",
+                "Exception when calling OrganizationApi->get_organization_organization_list: '%s'.\n",
                 exception,
             )
             sys.exit(1)
@@ -259,13 +270,14 @@ class IntersightClient:
         if organization_result.results:
             organization_moid = organization_result.results[0].moid
             logger.info(
-                "Moid of the Organization name '%s' is '%s'\n",
+                "Moid of the Organization name '%s' is '%s'.\n",
                 organization_name,
                 organization_moid,
             )
+
         else:
             logger.error(
-                "Organization with name '%s' not found in Intersight\n",
+                "Organization with name '%s' not found in Intersight.\n",
                 organization_name,
             )
             sys.exit(1)
@@ -284,7 +296,7 @@ class IntersightClient:
             server_profile_moid (str): The moid of the Server Profile.
 
         Returns:
-            vhba_list (list): A list of dictionaries containing vHBA WWPN, name and Fabric information.
+            vhba_list (list): A list of dictionaries containing vHBA WWPN, vHBA name and vHBA Fabric information.
             Each dictionary contains the keys 'vhba_wwpn', 'vhba_name' and 'vhba_fabric'.
             Example:
                 [
@@ -303,8 +315,9 @@ class IntersightClient:
         Raises:
             intersight.ApiException: If an error occurs while retrieving the vHBA WWPN.
         """
+
         logger.info(
-            "Fetching vHBAs attached to a Server Profile filtered by Server Profile moid '%s'\n",
+            "Fetching vHBAs attached to a Server Profile filtered by Server Profile moid '%s'.\n",
             server_profile_moid,
         )
 
@@ -313,13 +326,13 @@ class IntersightClient:
         # Create filter.
         filter_str = f"Profile.Moid eq '{server_profile_moid}'"
 
-        # Read a 'vnic.VnicFcIf' resource with filter.
+        # Read a 'vnic.FcIf' resource with filter.
         try:
             vnic_fc_if_result = api_instance.get_vnic_fc_if_list(filter=filter_str)
 
         except intersight.ApiException as exception:
             logger.warning(
-                "Exception when calling VnicApi->get_vnic_fc_if_list: '%s'\n",
+                "Exception when calling VnicApi->get_vnic_fc_if_list: '%s'.\n",
                 exception,
             )
             sys.exit(1)
@@ -334,14 +347,16 @@ class IntersightClient:
                         "vhba_fabric": vnic_fc_if.placement.switch_id,
                     }
                 )
+
             logger.info(
-                "List of vHBAs attached to Server Profile with moid '%s' is '%s'\n",
+                "List of vHBAs attached to Server Profile with moid '%s' is '%s'.\n",
                 server_profile_moid,
                 vhba_list,
             )
+
         else:
             logger.error(
-                "vHBAs not found in Intersight for Server Profile with moid '%s'\n",
+                "vHBAs not found in Intersight for Server Profile with moid '%s'.\n",
                 server_profile_moid,
             )
             sys.exit(1)
@@ -359,14 +374,15 @@ class IntersightClient:
             organization_name (str): The name of the organization.
 
         Returns:
-            organization_reference (MoMoRef): The created Organization reference.
+            organization_reference (MoMoRef): Organization reference object.
 
         Raises:
             intersight.ApiException: If an error occurs while retrieving the organization.
 
         """
+
         logger.info(
-            "Creating Organization reference object from Organization name %s\n",
+            "Creating Organization reference object from Organization name '%s'.\n",
             organization_name,
         )
 
@@ -383,7 +399,7 @@ class IntersightClient:
 
         except intersight.ApiException as exception:
             logger.warning(
-                "Exception when calling OrganizationApi->get_organization_organization_list: %s\n",
+                "Exception when calling OrganizationApi->get_organization_organization_list: %s.\n",
                 exception,
             )
             sys.exit(1)
@@ -391,7 +407,7 @@ class IntersightClient:
         if organization_result.results:
             organization_moid = organization_result.results[0].moid
             logger.info(
-                "Moid of the organization name %s is %s\n",
+                "Moid of the organization name '%s' is '%s'.\n",
                 organization_name,
                 organization_moid,
             )
@@ -403,13 +419,13 @@ class IntersightClient:
             )
 
             logger.info(
-                "Organization reference object from Organization name %s was successfully created\n",
+                "Organization reference object from Organization name '%s' was successfully created.\n",
                 organization_name,
             )
 
         else:
             logger.error(
-                "Organization with name %s not found in Intersight\n",
+                "Organization with name '%s' not found in Intersight.\n",
                 organization_name,
             )
             sys.exit(1)

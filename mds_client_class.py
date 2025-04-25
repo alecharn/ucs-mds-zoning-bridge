@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-This module defines the MdsClient class to interact with Cisco MDS NX-API.
+This module defines the `MdsClient` class to interact with Cisco MDS NX-API.
 
 Author:
     Adrien LECHARNY - April 2025
@@ -31,6 +31,18 @@ class MdsClient:
     Class to interact with MDS NX-API.
 
     This class provides various methods.
+
+    Attributes:
+        mds_ip_address (str): IP address of the MDS switch.
+        mds_username (str): Username for authentication.
+        mds_password (str): Password for authentication.
+        api_headers (dict): Headers for API requests.
+        api_payload (dict): Payload for API requests.
+        api_timeout (int): Timeout for API requests.
+        api_type_config (str): Type of configuration command.
+        api_type_show (str): Type of show command.
+        api_url (str): URL for API requests.
+        api_verify (bool): SSL verification flag.
     """
 
     # Class variables
@@ -39,13 +51,13 @@ class MdsClient:
         Initialize the MdsClient class.
 
         Args:
-            ip_address (str): IP address of the MDS switch.
-            username (str): Username for authentication.
-            password (str): Password for authentication.
+            mds_ip_address (str): IP address of the MDS switch.
+            mds_username (str): Username for authentication.
+            mds_password (str): Password for authentication.
         """
 
         logger.info(
-            "Initializing MDSClient with IP address '%s' and username '%s'\n",
+            "Initializing `MDSClient` instance with IP address '%s' and username '%s'.\n",
             mds_ip_address,
             mds_username,
         )
@@ -97,18 +109,19 @@ class MdsClient:
         Send a POST request to the MDS switch.
 
         Args:
-            input (str): Input command to be sent.
-            type (str): Type of command.
+            request_input (str): Input command to be sent.
+            request_type (str): Type of command.
 
         Returns:
             response (requests.Response): Response object from the POST request.
         """
+
         payload = self.api_payload
         payload["ins_api"]["input"] = request_input
         payload["ins_api"]["type"] = request_type
 
         logger.info(
-            "Sending POST request to MDS switch of type '%s' with input '%s'\n",
+            "Sending POST request to MDS switch of type '%s' with input '%s'.\n",
             request_type,
             request_input,
         )
@@ -151,7 +164,7 @@ class MdsClient:
 
         else:
             logger.error(
-                "POST request failed with status code: %s and response content: %s\n",
+                "POST request failed with status code: '%s' and response content: '%s'.\n",
                 response.status_code,
                 response.json(),
             )
@@ -160,8 +173,9 @@ class MdsClient:
         # Check CLI error in the content of response the code
         if "code" in response.json()["ins_api"]["outputs"]["output"]:
             if response.json()["ins_api"]["outputs"]["output"]["code"] != "200":
+
                 logger.error(
-                    "CLI command pushed to MDS `%s` generated the following error:\n%s\n",
+                    "CLI command pushed to MDS `%s` generated the following error:%s\n",
                     self.ip_address,
                     response.json()["ins_api"]["outputs"]["output"],
                 )
@@ -180,15 +194,16 @@ class MdsClient:
         Returns:
             response (json): JSON response from the MDS switch.
         """
+
         logger.info(
-            "Activating zoneset '%s' in VSAN '%s'\n",
+            "Activating zoneset '%s' in VSAN '%s'.\n",
             zoneset_name,
             vsan_id,
         )
 
         # Construct the command to activate zoneset
         command = f"zoneset activate name {zoneset_name} vsan {vsan_id}"
-        logger.info("Constructed command to activate zoneset: '%s'\n", command)
+        logger.info("Constructed command to activate zoneset: '%s'.\n", command)
 
         # Send the POST request
         response = self.post_request(
@@ -200,10 +215,10 @@ class MdsClient:
     # Method to add device alias to the MDS switch
     def add_device_alias(self, device_alias_name: str, wwpn: str):
         """
-        Add a device alias to the MDS switch.
+        Add a device-alias to the MDS switch associated with a WWPN.
 
         Args:
-            device_alias_name (str): Name of the device alias.
+            device_alias_name (str): Name of the device-alias.
             wwpn (str): WWPN of the device.
 
         Returns:
@@ -211,7 +226,7 @@ class MdsClient:
         """
 
         logger.info(
-            "Adding device alias '%s' with WWPN '%s'\n",
+            "Adding device alias '%s' with WWPN '%s'.\n",
             device_alias_name,
             wwpn,
         )
@@ -230,7 +245,7 @@ class MdsClient:
     # Method to add zone to zoneset on the MDS switch
     def add_zone_to_zoneset(self, zone_name: str, zoneset_name: str, vsan_id: str):
         """
-        Add a zone to a zoneset on the MDS switch.
+        Add a zone to a zoneset on the MDS switch in a specific VSAN.
 
         Args:
             zone_name (str): Name of the zone.
@@ -242,7 +257,7 @@ class MdsClient:
         """
 
         logger.info(
-            "Adding zone '%s' to zoneset '%s' in VSAN '%s'\n",
+            "Adding zone '%s' to zoneset '%s' in VSAN '%s'.\n",
             zone_name,
             zoneset_name,
             vsan_id,
@@ -262,7 +277,7 @@ class MdsClient:
     # Method to configure zone on the MDS switch
     def configure_zone(self, zone_name: str, vsan_id: str):
         """
-        Configure zone on the MDS switch.
+        Configure zone on the MDS switch in a specific VSAN.
 
         Args:
             zone_name (str): Name of the zone.
@@ -273,7 +288,7 @@ class MdsClient:
         """
 
         logger.info(
-            "Configuring zone '%s' in VSAN '%s'",
+            "Configuring zone '%s' in VSAN '%s'.",
             zone_name,
             vsan_id,
         )
@@ -298,7 +313,10 @@ class MdsClient:
         device_alias_name: str = None,
     ):
         """
-        Add a member to a zone on the MDS switch.
+        Add a member to a zone on the MDS switch in a specific VSAN.
+        This method can add a member using either the WWPN or the device alias name.
+        If both are provided, the device alias name will be used.
+        This method also configures the zone if it does not exist.
 
         Args:
             zone_name (str): Name of the zone.
@@ -322,7 +340,7 @@ class MdsClient:
         if device_alias_name:
 
             logger.info(
-                "Adding member with device alias '%s' to zone '%s' in VSAN '%s'\n",
+                "Adding member with device alias '%s' to zone '%s' in VSAN '%s'.\n",
                 device_alias_name,
                 zone_name,
                 vsan_id,
@@ -335,7 +353,7 @@ class MdsClient:
         # Use member WWPN if device alias name is not provided
         elif wwpn:
             logger.info(
-                "Adding member with WWPN '%s' to zone '%s' in VSAN '%s'\n",
+                "Adding member with WWPN '%s' to zone '%s' in VSAN '%s'.\n",
                 wwpn,
                 zone_name,
                 vsan_id,
@@ -355,7 +373,7 @@ class MdsClient:
     # Method to fetch zone information from the MDS switch
     def fetch_zone_info(self, zone_name: str, vsan_id: str):
         """
-        Fetch zone information from the MDS switch.
+        Fetch zone information from the MDS switch in a specific VSAN.
 
         Args:
             zone_name (str): Name of the zone.
@@ -366,7 +384,7 @@ class MdsClient:
         """
 
         logger.info(
-            "Fetching zone information for zone '%s' in VSAN '%s'\n",
+            "Fetching zone information for zone '%s' in VSAN '%s'.\n",
             zone_name,
             vsan_id,
         )

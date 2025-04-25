@@ -10,6 +10,7 @@ Author:
 # Standard library imports
 import logging
 
+# Define the logging format
 FORMAT = "%(asctime)-15s [%(levelname)s] [%(filename)s:%(lineno)s %(threadName)s %(funcName)s()] %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 logger = logging.getLogger("project_logger")

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Main module to initialize and configure clients.
+This module allows to quickly test the ZoneBridgeClient class and its methods.
+It uses environment variables and user-defined variables to configure the Intersight and MDS clients.
 
 Author:
     Adrien LECHARNY - April 2025
@@ -21,6 +22,7 @@ from zone_bridge_client_class import ZoneBridgeClient
 ##############################################################################
 
 # Load environment variables from .env file
+# All sensitive information should be stored in a .env file and not hardcoded in the script.
 load_dotenv()
 
 # .ENV.MAIN
@@ -44,7 +46,7 @@ MDS_PASSWORD_B = os.getenv("MDS_PASSWORD_B")
 
 
 ##############################################################################
-#                            Zoning Variables                                #
+#                             User Variables                                 #
 ##############################################################################
 
 # Server Profile in Intersight
@@ -93,7 +95,7 @@ if __name__ == "__main__":
         mds_client_b=mds_client_b,
     )
 
-    # Configure zones and device aliases in MDS based on Intersight Server Profile vHBAs
+    # Configure device-aliases and zoning in MDS based on Intersight Server Profile vHBAs
     zone_bridge_client.configure_intersight_mds_zones(
         server_profile_name=SERVER_PROFILE_NAME,
         organization_name=ORGANIZATION_NAME,
@@ -103,7 +105,7 @@ if __name__ == "__main__":
         zoneset_name_b=ZONESET_B,
         zone_name_b=ZONE_B,
         vsan_id_b=VSAN_B,
-        flag_configure_device_aliases=False,
+        flag_configure_device_aliases=True,
         flag_add_zones_to_zonesets=True,
         flag_activate_zonesets=True,
     )
