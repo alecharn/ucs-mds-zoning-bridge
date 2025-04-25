@@ -231,11 +231,11 @@ class ZoneBridgeClient:
         vsan_id_a: str,
         zone_name_b: str,
         vsan_id_b: str,
+        flag_configure_device_aliases: bool,
+        flag_add_zones_to_zonesets: bool,
+        flag_activate_zonesets: bool,
         zoneset_name_a: str = None,
         zoneset_name_b: str = None,
-        flag_configure_device_aliases: bool = True,
-        flag_add_zones_to_zonesets: bool = True,
-        flag_activate_zonesets: bool = True,
     ):
         """
         Fetch vHBAs attached to an Intersight Server Profile, optionnaly configure device aliases, and add them as members of a zone on each MDS of Fabric A and B, then add the zones to zonesets and activate them.
@@ -255,21 +255,60 @@ class ZoneBridgeClient:
             zone_name_b (str): Name of the zone to be configured in MDS.
             vsan_id_b (str): VSAN ID for the zone configuration.
             flag_configure_device_aliases (bool): Flag to configure device aliases on MDS.
-                Default is True.
                 If set to True, device aliases will be configured and will be used to add member in zone.
                 If set to False, WWPNs will be added directly to the zones.
             flag_add_zones_to_zonesets (bool): Flag to add zones to zonesets.
-                Default is True.
                 If set to True, zones will be added to the zonesets.
                 If set to False, zones will not be added to the zonesets.
             flag_activate_zonesets (bool): Flag to activate zonesets.
-                Default is True.
                 If set to True, zonesets will be activated.
                 If set to False, zonesets will not be activated.
 
         Returns:
             None
         """
+
+        # Log the start of the method
+        logger.info(
+            "Configuring Intersight MDS zoning from server profile '%s' in organization '%s'.\n",
+            server_profile_name,
+            organization_name,
+        )
+
+        # Check that all flags are provided
+        if flag_configure_device_aliases is None:
+            logger.error(
+                "Flag to configure device aliases is required to configure zones in MDS.\n"
+            )
+            sys.exit(1)
+
+        if flag_add_zones_to_zonesets is None:
+            logger.error(
+                "Flag to add zones to zonesets is required to configure zones in MDS.\n"
+            )
+            sys.exit(1)
+
+        if flag_activate_zonesets is None:
+            logger.error(
+                "Flag to activate zonesets is required to configure zones in MDS.\n"
+            )
+            sys.exit(1)
+
+        # Log all arguments with debug level
+        logger.debug(
+            "Arguments: server_profile_name=%s, organization_name=%s, zoneset_name_a=%s, zone_name_a=%s, vsan_id_a=%s, zoneset_name_b=%s, zone_name_b=%s, vsan_id_b=%s, flag_configure_device_aliases=%s, flag_add_zones_to_zonesets=%s, flag_activate_zonesets=%s\n",
+            server_profile_name,
+            organization_name,
+            zoneset_name_a,
+            zone_name_a,
+            vsan_id_a,
+            zoneset_name_b,
+            zone_name_b,
+            vsan_id_b,
+            flag_configure_device_aliases,
+            flag_add_zones_to_zonesets,
+            flag_activate_zonesets,
+        )
 
         # Fetch the organization moid from Intersight
         organization_moid = (
@@ -294,7 +333,7 @@ class ZoneBridgeClient:
 
             # Check if flag to configure device aliases is set to True
             # If flag is set to True, device alias will be used for zoning
-            if flag_configure_device_aliases:
+            if flag_configure_device_aliases is True:
                 device_alias_name = (
                     f"{server_profile_name}-{vhba['vhba_fabric']}-{vhba['vhba_name']}"
                 )
@@ -409,7 +448,7 @@ class ZoneBridgeClient:
                 sys.exit(1)
 
         # Add zones to zonesets if the flag is set to True
-        if flag_add_zones_to_zonesets:
+        if flag_add_zones_to_zonesets is True:
             logger.info(
                 "Adding zones to zonesets in each MDS of Fabric A and B.\n",
             )
@@ -450,10 +489,12 @@ class ZoneBridgeClient:
             )
 
         else:
-            logger.info("Skipping adding zones to zonesets in each MDS of Fabric A and B.\n")
+            logger.info(
+                "Skipping adding zones to zonesets in each MDS of Fabric A and B.\n"
+            )
 
         # Activate zonesets if the flag is set to True
-        if flag_activate_zonesets:
+        if flag_activate_zonesets is True:
 
             # Check that zoneset names are provided
             if zoneset_name_a is None or zoneset_name_b is None:

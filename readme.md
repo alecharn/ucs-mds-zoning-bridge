@@ -51,11 +51,11 @@ python zone_bridge_fire.py configure_intersight_mds_zones [OPTIONS]
 - `--vsan_id_a`: (Required) VSAN ID for MDS A.
 - `--zone_name_b`: (Required) Name of the zone for MDS B.
 - `--vsan_id_b`: (Required) VSAN ID for MDS B.
-- `--zoneset_name_a`: (Required if `flag_add_zones_to_zonesets` is set to `true`) Name of the zoneset for MDS A. Default is `None`.
-- `--zoneset_name_b`: (Required if `flag_add_zones_to_zonesets` is set to `true`) Name of the zoneset for MDS B. Default is `None`.
-- `--flag_configure_device_aliases`: (Optional) Boolean flag to configure device aliases. Default is `true`.
-- `--flag_add_zones_to_zonesets`: (Optional) Boolean flag to add zones to zonesets. Default is `true`.
-- `--flag_activate_zonesets`: (Optional) Boolean flag to activate zonesets. Default is `true`.
+- `--flag_configure_device_aliases`: (Optional) Boolean flag to configure device aliases. 
+- `--flag_add_zones_to_zonesets`: (Optional) Boolean flag to add zones to zonesets. 
+- `--flag_activate_zonesets`: (Optional) Boolean flag to activate zonesets.
+- `--zoneset_name_a`: (Required if `flag_add_zones_to_zonesets` is set to `True`) Name of the zoneset for MDS A. Default is `None`.
+- `--zoneset_name_b`: (Required if `flag_add_zones_to_zonesets` is set to `True`) Name of the zoneset for MDS B. Default is `None`.
 
 ### Device-Aliases Considerations
 
@@ -93,9 +93,9 @@ python zone_bridge_fire.py configure_intersight_mds_zones \
     --vsan_id_b=200 \
     --zoneset_name_a=zoneset-demo-a \
     --zoneset_name_b=zoneset-demo-b \
-    --flag_configure_device_aliases=true \
-    --flag_add_zones_to_zonesets=true \
-    --flag_activate_zonesets=true
+    --flag_configure_device_aliases=True \
+    --flag_add_zones_to_zonesets=True \
+    --flag_activate_zonesets=True
 ```
 
 #### Example 2
@@ -112,9 +112,9 @@ python zone_bridge_fire.py configure_intersight_mds_zones \
     --vsan_id_b=200 \
     --zoneset_name_a=zoneset-demo-a \
     --zoneset_name_b=zoneset-demo-b \
-    --flag_configure_device_aliases=false \
-    --flag_add_zones_to_zonesets=true \
-    --flag_activate_zonesets=true
+    --flag_configure_device_aliases=False \
+    --flag_add_zones_to_zonesets=True \
+    --flag_activate_zonesets=True
 ```
 
 #### Example 3
@@ -131,9 +131,9 @@ python zone_bridge_fire.py configure_intersight_mds_zones \
     --vsan_id_b=200 \
     --zoneset_name_a=zoneset-demo-a \
     --zoneset_name_b=zoneset-demo-b \
-    --flag_configure_device_aliases=false \
-    --flag_add_zones_to_zonesets=false \
-    --flag_activate_zonesets=false
+    --flag_configure_device_aliases=False \
+    --flag_add_zones_to_zonesets=False \
+    --flag_activate_zonesets=False
 ```
 
 ## Contributing
