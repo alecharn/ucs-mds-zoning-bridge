@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-This module defines a CLI for managing zoning using the ZoneBridgeClient.
+This module defines a CLI for managing zoning using the `ZoneBridgeClient`.
 
 Author:
     Adrien LECHARNY - April 2025

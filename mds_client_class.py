@@ -30,7 +30,7 @@ class MdsClient:
     """
     Class to interact with MDS NX-API.
 
-    This class provides various methods.
+    This class provides various methods to interact with the MDS switch using NX-API.
 
     Attributes:
         mds_ip_address (str): IP address of the MDS switch.
@@ -233,7 +233,7 @@ class MdsClient:
 
         # Construct the command to add device alias
         command = f"device-alias database ;device-alias name {device_alias_name} pwwn {wwpn} ;device-alias commit"
-        logger.info("Constructed command to add device alias: '%s'\n", command)
+        logger.info("Constructed command to add device alias: '%s'.\n", command)
 
         # Send the POST request
         response = self.post_request(
@@ -246,6 +246,7 @@ class MdsClient:
     def add_zone_to_zoneset(self, zone_name: str, zoneset_name: str, vsan_id: str):
         """
         Add a zone to a zoneset on the MDS switch in a specific VSAN.
+        If zone does not exist, it will be created.
 
         Args:
             zone_name (str): Name of the zone.
@@ -265,7 +266,7 @@ class MdsClient:
 
         # Construct the command to add zone to zoneset
         command = f"zoneset name {zoneset_name} vsan {vsan_id} ;member {zone_name}"
-        logger.info("Constructed command to add zone to zoneset: '%s'\n", command)
+        logger.info("Constructed command to add zone to zoneset: '%s'.\n", command)
 
         # Send the POST request
         response = self.post_request(
@@ -295,7 +296,7 @@ class MdsClient:
 
         # Construct the command to configure zone
         command = f"zone name {zone_name} vsan {vsan_id}"
-        logger.info("Constructed command to configure zone: '%s'\n", command)
+        logger.info("Constructed command to configure zone: '%s'.\n", command)
 
         # Send the POST request
         response = self.post_request(
@@ -361,7 +362,7 @@ class MdsClient:
 
             # Construct the command to configure zone and add a member WWPN to it
             command = f"zone name {zone_name} vsan {vsan_id} ;member pwwn {wwpn}"
-            logger.info("Constructed command to add member to zone: '%s'\n", command)
+            logger.info("Constructed command to add member to zone: '%s'.\n", command)
 
         # Send the POST request
         response = self.post_request(
@@ -391,7 +392,7 @@ class MdsClient:
 
         # Construct the command to fetch zone information
         command = f"show zone name {zone_name} vsan {vsan_id}"
-        logger.info("Constructed command to fetch zone information: %s\n", command)
+        logger.info("Constructed command to fetch zone information: %s.\n", command)
 
         # Send the POST request
         response = self.post_request(

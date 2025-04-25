@@ -38,7 +38,7 @@ class IntersightClient:
     """
     Class to interact with Cisco Intersight API.
 
-    This class provides various methods.
+    This class provides various methods to interact with Cisco Intersight API.
 
     Attributes:
         _intersight_key_id (str): The Intersight key ID.
