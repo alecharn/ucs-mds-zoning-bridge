@@ -46,3 +46,6 @@ utility.py
 
 # Ignore all YAML files
 *.yaml
+
+# Ignore miscellaneous files
+cli.txt
