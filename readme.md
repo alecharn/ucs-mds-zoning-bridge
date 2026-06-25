@@ -2,6 +2,8 @@
 
 ucs-mds-zoning-bridge is a tool designed to simplify and automate the process of managing zoning configurations between Cisco UCS and MDS switches. This tool bridges the gap between UCS Server Profiles vHBAs configured in Intersight and MDS zoning, ensuring seamless integration and efficient management.
 
+> **Note**: This project has been improved and mostly re-used in my project: [ucs-san-builder](https://github.com/alecharn/ucs-san-builder).
+
 ## Features
 
 - **Automated Device Aliases**: Automatically configures device-aliases from UCS Server Profiles' vHBAs defined in Intersight.
